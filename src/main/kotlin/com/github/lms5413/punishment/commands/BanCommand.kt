@@ -16,32 +16,33 @@ class BanCommand: BaseCommand() {
     @Default
     @Syntax("<player> - The player to ban <reason> - The reason for the ban")
     fun onBanCommand(player: CommandSender, @Single target: String, @Optional reason: String? = "No reason provided") {
-        val target = Bukkit.getOfflinePlayer(target)
+        val targetPlayer = Bukkit.getOfflinePlayer(target)
         val reason = reason ?: "No reason provided"
 
-        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(target.uniqueId.toString(), true)
+        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(targetPlayer.uniqueId.toString(), true)
         if (punishmentHistory != null) {
             player.sendMessage("§cThis player have punishment active.")
             return
         }
 
-        if (target.isOnline) {
-            val targetPlayer = Bukkit.getPlayer(target.uniqueId)!!
+        if (targetPlayer.isOnline) {
+            val targetPlayer = Bukkit.getPlayer(targetPlayer.uniqueId)!!
             kickPlayer(targetPlayer, "messages.permanent-banned", player, reason)
         }
 
         Punishment.getInstance().getPunishmentManager().addPunishment(
             PunishmentModel(
                 id = 0,
-                uuid = target.uniqueId.toString(),
+                uuid = targetPlayer.uniqueId.toString(),
                 type = PunishmentTypes.BAN,
                 reason = reason,
                 author = player.name,
                 ip = null,
+                name = target
             )
         )
 
-        player.sendMessage("§aYou have banned ${target.name} for $reason")
+        player.sendMessage("§aYou have banned ${targetPlayer.name} for $reason")
 
     }
 }

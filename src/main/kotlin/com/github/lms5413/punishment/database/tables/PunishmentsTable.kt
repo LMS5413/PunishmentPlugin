@@ -13,6 +13,7 @@ object PunishmentsTable : Table() {
     val reason = text("reason").nullable()
     val isActive = bool("is_active").default(true)
     val author = varchar("author", 16)
+    val name = varchar("name", 16).nullable()
 
 
     override val primaryKey = PrimaryKey(id)

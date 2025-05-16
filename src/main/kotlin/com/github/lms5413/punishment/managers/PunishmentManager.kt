@@ -7,26 +7,30 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class PunishmentManager {
 
-    private val punishments = mutableMapOf<String, PunishmentModel>()
+    private val punishments = mutableListOf<PunishmentModel>()
 
     init {
         loadPunishments()
     }
 
     fun getPunishment(uuid: String, force: Boolean = false): PunishmentModel? {
-        return punishments[uuid]
+        return punishments.find { it.uuid == uuid }
             ?: if (force) loadPunishmentFromDatabase(uuid, false)
             else null
     }
 
+    fun getPunishments(): List<PunishmentModel> {
+        return punishments
+    }
+
     fun getActivePunishment(uuid: String, force: Boolean = false): PunishmentModel? {
-        return punishments[uuid]?.takeIf { it.isActive }
+        return punishments.find { it.uuid == uuid && it.isActive }
             ?: if (force) loadPunishmentFromDatabase(uuid, true)
             else null
     }
 
     fun getActivePunishmentByIp(ip: String): PunishmentModel? {
-        return punishments.values.firstOrNull { it.ip == ip && it.isActive }
+        return punishments.firstOrNull { it.ip == ip && it.isActive }
     }
 
     fun addPunishment(punishment: PunishmentModel) {
@@ -39,10 +43,11 @@ class PunishmentManager {
                 it[isActive] = punishment.isActive
                 it[author] = punishment.author
                 it[timeout] = punishment.timeout
+                it[name] = punishment.name
             }
 
             punishment.id = result[PunishmentsTable.id]
-            punishments[punishment.uuid] = punishment
+            punishments[punishment.id] = punishment
         }
     }
 
@@ -56,7 +61,7 @@ class PunishmentManager {
                 it[timeout] = punishment.timeout
             }
 
-            punishments[punishment.uuid] = punishment
+            punishments[punishments.indexOfFirst { it.uuid == punishment.uuid }] = punishment
         }
     }
 
@@ -66,7 +71,7 @@ class PunishmentManager {
             for (user in users) {
                 val punishment = mapRowToPunishment(user)
 
-                punishments[punishment.uuid] = punishment
+                punishments.add(punishment)
             }
         }
     }
@@ -80,7 +85,8 @@ class PunishmentManager {
             ip = row[PunishmentsTable.ip],
             isActive = row[PunishmentsTable.isActive],
             author = row[PunishmentsTable.author],
-            timeout = row[PunishmentsTable.timeout]
+            timeout = row[PunishmentsTable.timeout],
+            name = row[PunishmentsTable.name] ?: "Unknown"
         )
     }
 
@@ -92,7 +98,7 @@ class PunishmentManager {
 
             query?.let {
                 val model = mapRowToPunishment(it)
-                punishments[uuid] = model
+                punishments.add(model)
                 model
             }
         }

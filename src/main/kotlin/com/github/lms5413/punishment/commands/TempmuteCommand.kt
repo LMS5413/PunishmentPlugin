@@ -7,7 +7,6 @@ import com.github.lms5413.punishment.enums.PunishmentTypes
 import com.github.lms5413.punishment.models.PunishmentModel
 import com.github.lms5413.punishment.utils.buildMessage
 import com.github.lms5413.punishment.utils.convertStringToTime
-import com.github.lms5413.punishment.utils.kickPlayer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
@@ -18,10 +17,10 @@ class TempmuteCommand: BaseCommand() {
     @Default
     @Syntax("<player> - The player to mute <time> - Time for mute (ex 7d) <reason> - The reason for the mute")
     fun onTempbanCommand(player: CommandSender, @Single target: String, @Single time: String, @Optional reason: String? = "No reason provided") {
-        val target = Bukkit.getOfflinePlayer(target)
+        val targetPlayer = Bukkit.getOfflinePlayer(target)
         val reason = reason ?: "No reason provided"
 
-        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(target.uniqueId.toString(), true)
+        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(targetPlayer.uniqueId.toString(), true)
         if (punishmentHistory != null) {
             player.sendMessage("§cThis player have punishment active.")
             return
@@ -33,24 +32,25 @@ class TempmuteCommand: BaseCommand() {
             return
         }
 
-        if (target.isOnline) {
-            val targetPlayer = Bukkit.getPlayer(target.uniqueId)!!
+        if (targetPlayer.isOnline) {
+            val targetPlayer = Bukkit.getPlayer(targetPlayer.uniqueId)!!
             targetPlayer.sendMessage(buildMessage("messages.temp-mute", player, reason, time))
         }
 
         Punishment.getInstance().getPunishmentManager().addPunishment(
             PunishmentModel(
                 id = 0,
-                uuid = target.uniqueId.toString(),
+                uuid = targetPlayer.uniqueId.toString(),
                 type = PunishmentTypes.MUTE,
                 reason = reason,
                 author = player.name,
                 ip = null,
                 timeout = System.currentTimeMillis() + time,
+                name = target
             )
         )
 
-        player.sendMessage("§aYou have banned ${target.name} for $reason")
+        player.sendMessage("§aYou have banned ${targetPlayer.name} for $reason")
 
     }
 }

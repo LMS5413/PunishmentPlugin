@@ -17,10 +17,10 @@ class TempbanCommand: BaseCommand() {
     @Default
     @Syntax("<player> - The player to ban <time> - Time for ban (ex 7d) <reason> - The reason for the ban")
     fun onTempbanCommand(player: CommandSender, @Single target: String, @Single time: String, @Optional reason: String? = "No reason provided") {
-        val target = Bukkit.getOfflinePlayer(target)
+        val targetPlayer = Bukkit.getOfflinePlayer(target)
         val reason = reason ?: "No reason provided"
 
-        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(target.uniqueId.toString(), true)
+        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(targetPlayer.uniqueId.toString(), true)
         if (punishmentHistory != null) {
             player.sendMessage("§cThis player have punishment active.")
             return
@@ -32,24 +32,25 @@ class TempbanCommand: BaseCommand() {
             return
         }
 
-        if (target.isOnline) {
-            val targetPlayer = Bukkit.getPlayer(target.uniqueId)!!
+        if (targetPlayer.isOnline) {
+            val targetPlayer = Bukkit.getPlayer(targetPlayer.uniqueId)!!
             kickPlayer(targetPlayer, "messages.temp-banned", player, reason, time)
         }
 
         Punishment.getInstance().getPunishmentManager().addPunishment(
             PunishmentModel(
                 id = 0,
-                uuid = target.uniqueId.toString(),
+                uuid = targetPlayer.uniqueId.toString(),
                 type = PunishmentTypes.BAN,
                 reason = reason,
                 author = player.name,
                 ip = null,
                 timeout = System.currentTimeMillis() + time,
+                name = target
             )
         )
 
-        player.sendMessage("§aYou have banned ${target.name} for $reason")
+        player.sendMessage("§aYou have banned ${targetPlayer.name} for $reason")
 
     }
 }

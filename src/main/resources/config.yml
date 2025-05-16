@@ -34,3 +34,16 @@ messages:
     - "<red>Reason: {reason}</red>"
     - "<red>Muted by: {author}</red>"
     - "<red>Until: {time}</red>"
+
+gui-history:
+  main:
+    title: "<dark_purple>History of {player}</dark_purple>"
+    lore:
+      - "<gray>Player:</gray> <white>{player}</white>"
+      - "<gray>Author:</gray> <red>{author}</red>"
+      - "<gray>Reason:</gray> <white>{reason}</white>"
+      - "<gray>Type:</gray> <yellow>{type}</yellow>"
+      - "<gray>IP:</gray> <white>{ip}</white>"
+      - "<gray>Expires:</gray> <gold>{time}</gold>"
+      - "<gray>ID:</gray> <blue>{id}</blue>"
+

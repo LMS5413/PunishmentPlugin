@@ -16,10 +16,10 @@ class MuteCommand: BaseCommand() {
     @Default
     @Syntax("<player> - The player to mute <reason> - The reason for the mute")
     fun onMuteCommand(player: CommandSender, @Single target: String, @Optional reason: String? = "No reason provided") {
-        val target = Bukkit.getOfflinePlayer(target)
+        val targetPlayer = Bukkit.getOfflinePlayer(target)
         val reason = reason ?: "No reason provided"
 
-        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(target.uniqueId.toString(), true)
+        val punishmentHistory = Punishment.getInstance().getPunishmentManager().getActivePunishment(targetPlayer.uniqueId.toString(), true)
         if (punishmentHistory != null) {
             player.sendMessage("§cThis player have punishment active.")
             return
@@ -30,15 +30,16 @@ class MuteCommand: BaseCommand() {
         Punishment.getInstance().getPunishmentManager().addPunishment(
             PunishmentModel(
                 id = 0,
-                uuid = target.uniqueId.toString(),
+                uuid = targetPlayer.uniqueId.toString(),
                 type = PunishmentTypes.MUTE,
                 reason = reason,
                 author = player.name,
                 ip = null,
+                name = target
             )
         )
 
-        player.sendMessage("§aYou have silenced ${target.name} for $reason")
+        player.sendMessage("§aYou have silenced ${targetPlayer.name} for $reason")
 
     }
 }

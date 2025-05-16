@@ -69,9 +69,9 @@ class ConfigModule(name: String, private val plugin: Plugin): YamlConfiguration(
         return MiniMessage.miniMessage().deserialize((value ?: defaultValue) ?: "")
     }
 
-    fun getComponentStringList(path: String): Component {
+    fun getComponentStringList(path: String): List<Component> {
         val value = getStringList(path)
-        return MiniMessage.miniMessage().deserialize(value.joinToString("\n"))
+        return value.map { MiniMessage.miniMessage().deserialize(it) }
     }
 
     fun getRawString(path: String): String? {

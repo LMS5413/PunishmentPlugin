@@ -7,6 +7,7 @@ import com.github.lms5413.punishment.events.PlayerEvent
 import com.github.lms5413.punishment.managers.LoginHistoryManager
 import com.github.lms5413.punishment.managers.PunishmentManager
 import com.github.lms5413.punishment.modules.ConfigModule
+import com.henryfabio.minecraft.inventoryapi.manager.InventoryManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -29,6 +30,7 @@ class Punishment : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
+        InventoryManager.enable(this)
         registerManagers()
         registerCommands()
         registerEvents()
@@ -73,8 +75,10 @@ class Punishment : JavaPlugin() {
         commandContext.registerCommand(IpbanCommand())
         commandContext.registerCommand(KickCommand())
         commandContext.registerCommand(MuteCommand())
+        commandContext.registerCommand(TempmuteCommand())
         commandContext.registerCommand(TempbanCommand())
         commandContext.registerCommand(UnbanCommand())
         commandContext.registerCommand(UnmuteCommand())
+        commandContext.registerCommand(HistoryCommand())
     }
 }
