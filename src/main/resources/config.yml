@@ -1,0 +1,36 @@
+database:
+  type: "SQLITE" # Options: SQLITE, MARIADB
+  host: "localhost"
+  username: "database"
+  password: "database"
+  database: "database"
+  port: 3306
+  pools: 6
+formatter:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+messages:
+  permanent-banned:
+    - "<red>You are banned from this server</red>"
+    - "<red>Reason: {reason}</red>"
+    - "<red>Banned by: {author}</red>"
+  temp-banned:
+    - "<red>You are banned from this server</red>"
+    - "<red>Reason: {reason}</red>"
+    - "<red>Banned by: {author}</red>"
+    - "<red>Until: {time}</red>"
+  kick:
+    - "<red>You are kicked from this server</red>"
+    - "<red>Reason: {reason}</red>"
+    - "<red>Kicked by: {author}</red>"
+  permanent-mute:
+    - "<red>You are muted from this server</red>"
+    - "<red>Reason: {reason}</red>"
+    - "<red>Muted by: {author}</red>"
+  temp-mute:
+    - "<red>You are muted from this server</red>"
+    - "<red>Reason: {reason}</red>"
+    - "<red>Muted by: {author}</red>"
+    - "<red>Until: {time}</red>"
