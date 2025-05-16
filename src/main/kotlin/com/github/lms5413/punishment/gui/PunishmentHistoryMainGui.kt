@@ -1,6 +1,7 @@
 package com.github.lms5413.punishment.gui
 
 import com.github.lms5413.punishment.Punishment
+import com.github.lms5413.punishment.utils.convertTimeToString
 import com.github.lms5413.punishment.utils.createHead
 import com.henryfabio.minecraft.inventoryapi.inventory.impl.paged.PagedInventory
 import com.henryfabio.minecraft.inventoryapi.item.InventoryItem
@@ -21,7 +22,7 @@ class PunishmentHistoryMainGui: PagedInventory("punishment.history", "Punishment
 
     override fun createPageItems(p0: PagedViewer): List<InventoryItemSupplier?>? {
         val suppliers = mutableListOf<InventoryItemSupplier?>()
-        val history = Punishment.getInstance().getPunishmentManager().getPunishments()
+        val history = Punishment.getInstance().getPunishmentManager().getPunishments().sortedByDescending { it.id }
 
         for (punishment in history) {
 
@@ -42,13 +43,15 @@ class PunishmentHistoryMainGui: PagedInventory("punishment.history", "Punishment
                     }.replaceText { text ->
                         text.matchLiteral("{author}").replacement(punishment.author)
                     }.replaceText { text ->
-                        text.matchLiteral("{time}").replacement(punishment.timeout?.toString() ?: "No time provided")
+                        text.matchLiteral("{time}").replacement(convertTimeToString((punishment.timeout ?: System.currentTimeMillis()) - System.currentTimeMillis()))
                     }.replaceText { text ->
                         text.matchLiteral("{type}").replacement(punishment.type.toString())
                     }.replaceText { text ->
                         text.matchLiteral("{ip}").replacement(punishment.ip ?: "No IP provided")
                     }.replaceText { text ->
                         text.matchLiteral("{id}").replacement(punishment.id.toString())
+                    }.replaceText { text ->
+                        text.matchLiteral("{active}").replacement(punishment.isActive.toString())
                     }.style(Style.empty().decoration(TextDecoration.ITALIC, false))
                 }
 

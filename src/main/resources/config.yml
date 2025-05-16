@@ -46,4 +46,5 @@ gui-history:
       - "<gray>IP:</gray> <white>{ip}</white>"
       - "<gray>Expires:</gray> <gold>{time}</gold>"
       - "<gray>ID:</gray> <blue>{id}</blue>"
+      - "<gray>Active:</gray> <green>{active}</green>"
 

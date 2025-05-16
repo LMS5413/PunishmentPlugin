@@ -53,7 +53,7 @@ class PlayerEvent: Listener {
                     "messages.temp-mute" else "messages.permanent-mute",
                 event.player,
                 punishmentInfo.reason,
-                punishmentInfo.timeout
+                punishmentInfo.timeout!! - System.currentTimeMillis()
             ))
             return
         }

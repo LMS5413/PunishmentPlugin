@@ -7,6 +7,7 @@ import com.github.lms5413.punishment.events.PlayerEvent
 import com.github.lms5413.punishment.managers.LoginHistoryManager
 import com.github.lms5413.punishment.managers.PunishmentManager
 import com.github.lms5413.punishment.modules.ConfigModule
+import com.github.lms5413.punishment.tasks.PunishmentTempTask
 import com.henryfabio.minecraft.inventoryapi.manager.InventoryManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -62,6 +63,7 @@ class Punishment : JavaPlugin() {
 
         punishmentManager = PunishmentManager()
         loginHistoryManager = LoginHistoryManager()
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, PunishmentTempTask(), 0L, 20L)
     }
 
     private fun registerEvents() {

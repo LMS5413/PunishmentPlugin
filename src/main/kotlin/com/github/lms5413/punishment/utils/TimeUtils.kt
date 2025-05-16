@@ -31,6 +31,7 @@ fun convertStringToTime(time: String): Long? {
 }
 
 fun convertTimeToString(time: Long): String {
+    if (time <= 0) return "0s"
 
     val fomatterSection = Punishment.getInstance().config.getConfigurationSection("formatter")
 

@@ -47,7 +47,7 @@ class PunishmentManager {
             }
 
             punishment.id = result[PunishmentsTable.id]
-            punishments[punishment.id] = punishment
+            punishments.add(punishment)
         }
     }
 
